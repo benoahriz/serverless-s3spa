@@ -1,0 +1,13 @@
+{
+  "name": "serverless-s3spa",
+  "version": "1.0.0",
+  "description": "A plugin to simplify deploying Single Page Application using S3",
+  "author": {
+    "name": "Benjamin Rizkowsky",
+    "email": "benoahriz@gmail.com"
+  },
+  "license": "GPL",
+  "dependencies": {
+    "s3": "^4.4.0"
+  }
+}
