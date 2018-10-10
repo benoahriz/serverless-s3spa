@@ -27,7 +27,7 @@ npm install serverless-stack-output
 
 ``` json
   "devDependencies": {
-    "serverless-s3spa": "file:./serverless-s3spa"
+    "serverless-s3spa": "serverless-s3spa"
   }
 ```
 
