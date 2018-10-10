@@ -6,7 +6,7 @@
     "clean": "rm -rf node_modules",
     "write-version": "mkdir -p dist/version && git --no-pager log -1 --tags --pretty=format:'{\"versionDate\":\"%aI\",\"shaVersion\":\"%H\",\"buildNumber\":\"%f\",\"version\":\"%s\"}' > dist/version/version.json",
     "postversion": "git push && git push --tags",
-    "release": "npm version patch && npm run postversion"
+    "release": "npm version patch && npm run postversion && npm publish"
   },
   "author": {
     "name": "Benjamin Rizkowsky",

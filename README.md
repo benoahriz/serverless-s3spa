@@ -9,12 +9,21 @@ I've moved to using a native node s3 interface instead of the aws cli via comman
 
 Make sure you have some credentials that can deploy serverless apps this plugin reads the environment variables,
 
-``` bash 
+``` bash
+
 AWS_ACCESS_KEY_ID=xxxxxx
 AWS_SECRET_ACCESS_KEY=xxxxxx
+
 ```
 
-If you want to add the plugin to your project using a folder just add the following to your package.json
+If you want to add the plugin to your project using a folder just add the following to your package.json  Its not required but I like using the serverless-stack-output plugin also.
+
+``` bash
+
+npm install serverless-s3spa
+npm install serverless-stack-output
+
+```
 
 ``` json
   "devDependencies": {
@@ -32,24 +41,26 @@ Create a serverless.yml file for your project with somethig like the following.
 # serverless syncToS3 --stage dev
 # serverless remove --stage dev
 
-service: myServerlessProject
+service: example-project-serverless
 
 plugins:
   - serverless-s3spa
+  - serverless-stack-output
 
 custom:
-  s3Bucket: myCustomBucket-${opt:stage}
-  syncFolder: dist
+  s3Bucket: example-project-serverless-${opt:stage}
+  syncFolder: build
+  output:
+    file: output.yaml
 
 provider:
   name: aws
   runtime: nodejs4.3
-  region: us-west-2
+  region: us-west-1
 
 resources:
   Resources:
-    # BucketConfig
-    myCustomS3Bucket:
+    StaticSite:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3Bucket}
@@ -57,18 +68,18 @@ resources:
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
-    # BucketPolicyConfig
-    myCustomS3BucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket:
-          Ref: myCustomS3Bucket
-        PolicyDocument:
-          Statement:
-            - Sid: PublicReadGetObject
-              Effect: Allow
-              Principal: "*"
-              Action:
-              - s3:GetObject
-              Resource: arn:aws:s3:::${self:custom.s3Bucket}/*
+    StaticSiteS3BucketPolicy:
+        Type: AWS::S3::BucketPolicy
+        Properties:
+          Bucket:
+            Ref: StaticSite
+          PolicyDocument:
+            Statement:
+              - Sid: PublicReadGetObject
+                Effect: Allow
+                Principal: "*"
+                Action:
+                - s3:GetObject
+                Resource:
+                  - Fn::Join: [ "", [ "arn:aws:s3:::", { "Ref": "StaticSite" }, "/*" ] ]
 ```
